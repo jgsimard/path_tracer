@@ -1,12 +1,9 @@
 //
 // Created by jeang on 2021-12-28.
 //
-
-#ifndef GRAPHICS_UTILS_H
-#define GRAPHICS_UTILS_H
+#pragma once
 
 // C++
-#include <iostream>
 #include <memory>
 #include <limits>
 #include <random>
@@ -25,7 +22,7 @@ using std::sqrt;
 
 // Constants
 const double infinity = std::numeric_limits<double>::infinity();
-constexpr double pi = std::acos(-1);
+const double pi = 3.141592653589793;
 
 // Utility Functions
 double degrees_to_radians(double degrees);
@@ -37,12 +34,25 @@ using Vec3 = Eigen::Vector3d;
 using Point3 = Eigen::Vector3d;
 using Color = Eigen::Vector3d;
 
-inline std::ostream& operator<<(std::ostream &out, const Vec3 &v);
+//inline std::ostream& operator<<(std::ostream &out, const Vec3 &v);
 
 void write_color(Color pixel_color);
 
-void write_color(Color pixel_color, const int samples_per_pixels);
+void write_color(Color pixel_color, int samples_per_pixels);
 
 Vec3 unit_vector(const Vec3& v);
 
-#endif //GRAPHICS_UTILS_H
+Vec3 random_vec();
+
+Vec3 random_vec(double min, double max);
+
+Vec3 random_in_unit_sphere();
+
+Vec3 random_unit_vector();
+
+Vec3 random_in_hemisphere(const Vec3& normal);
+
+bool near_zero(const Vec3& v);
+
+Vec3 reflect(const Vec3& v, const Vec3& normal);
+

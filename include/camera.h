@@ -1,9 +1,7 @@
 //
 // Created by jeang on 2021-12-29.
 //
-
-#ifndef GRAPHICS_CAMERA_H
-#define GRAPHICS_CAMERA_H
+#pragma once
 
 #include "utils.h"
 #include "ray.h"
@@ -20,5 +18,3 @@ private:
     Vec3 vertical_;
     Point3 lower_left_corner_;
 };
-
-#endif //GRAPHICS_CAMERA_H

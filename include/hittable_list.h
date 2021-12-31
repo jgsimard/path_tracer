@@ -2,8 +2,7 @@
 // Created by jeang on 2021-12-28.
 //
 
-#ifndef GRAPHICS_HITTABLE_LIST_H
-#define GRAPHICS_HITTABLE_LIST_H
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -29,4 +28,3 @@ public:
     vector<shared_ptr<Hittable>> hittables;
 };
 
-#endif //GRAPHICS_HITTABLE_LIST_H

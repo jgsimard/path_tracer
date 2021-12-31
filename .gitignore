@@ -34,3 +34,10 @@
 build/*
 .idea/*
 output/*
+
+/scenes/**/*2021-*.*
+/scenes/**/*.mtl
+/scenes/misc
+/scenes/meshes
+/scenes/assets
+

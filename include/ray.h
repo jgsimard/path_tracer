@@ -1,9 +1,7 @@
 //
 // Created by jeang on 2021-12-28.
 //
-
-#ifndef GRAPHICS_RAY_H
-#define GRAPHICS_RAY_H
+#pragma once
 
 #include "utils.h"
 
@@ -25,6 +23,3 @@ public:
     Point3 orig;
     Vec3 dir;
 };
-
-
-#endif //GRAPHICS_RAY_H

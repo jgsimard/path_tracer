@@ -1,78 +1,120 @@
 cmake_minimum_required(VERSION 3.16)
-project(graphics)
+project(graphics
+        VERSION 1.0
+        LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
 
-include(cmake/FetchDependencies.cmake)
+# ============================================================================
+# Configure dependencies
+# ============================================================================
+include(cmake/Config.cmake)
 
+
+# compilation options for faster result and better practive
 add_compile_options(
-        -fmodules-ts # enables modules g++-11 only
+#        -fmodules-ts # enables modules g++-11 only
         -O3
         -march=native # for SSE and AVX
         -mno-fma # fused multiply add
         -Wall # enables most compiler's warning messages
         -Wextra # enables more compiler's warning messages
-        -Werror # Make all warnings into errors. CANNOT  USE THAT WITH c++20 because Eigen 3.4.0 is not c++20 compliant
+#        -Werror # Make all warnings into errors. CANNOT  USE THAT WITH c++20 because Eigen 3.4.0 is not c++20 compliant
 )
 
-# for windows
-SET( EIGEN3_INCLUDE_DIR "$ENV{EIGEN3_INCLUDE_DIR}" )
-SET( CMAKE_MODULE_PATH "$ENV{EIGEN3_DIR}" )
+# ============================================================================
+# Create graphics library
+# ============================================================================
+#include_directories(
+#        include
+#)
 
-find_package(Eigen3 REQUIRED)
-
-include_directories(
-        include
-        ${EIGEN3_INCLUDE_DIR}
-)
-
-add_executable(graphics
-        main.cpp
-        )
-
-add_executable(first_image
+add_library(graphics_lib
         src/utils.cpp
-        first_image.cpp
-        )
-target_link_libraries(first_image PRIVATE fmt::fmt-header-only)
-
-
-add_executable(empty_backgound
-        src/utils.cpp
-        empty_backgound.cpp
-        )
-target_link_libraries(empty_backgound PRIVATE fmt::fmt-header-only)
-
-
-add_executable(first_sphere
-        src/utils.cpp
-        first_sphere.cpp
-        )
-target_link_libraries(first_sphere PRIVATE fmt::fmt-header-only)
-
-
-add_executable(sphere_with_normals
-        src/utils.cpp
-        sphere_with_normals.cpp
-        )
-target_link_libraries(sphere_with_normals PRIVATE fmt::fmt-header-only)
-
-
-add_executable(sphere_with_normals_with_ground
-        src/utils.cpp
-        src/hittable_list.cpp
-        src/sphere.cpp
-        sphere_with_normals_with_ground.cpp
-        )
-target_link_libraries(sphere_with_normals_with_ground PRIVATE fmt::fmt-header-only)
-
-
-add_executable(antialiasing
         src/camera.cpp
         src/hittable_list.cpp
         src/sphere.cpp
-        src/utils.cpp
-        antialiasing.cpp
-        )
-target_link_libraries(antialiasing PRIVATE fmt::fmt-header-only)
+        include/material.h)
 
+# being a cross-platform target, we enforce standards conformance on MSVC
+target_compile_options(graphics_lib PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
+
+# Link dependencies
+target_link_libraries(
+        graphics_lib
+        PRIVATE stb Threads::Threads tinyobjloader tinyexr
+        PUBLIC fmt::fmt nlohmann_json filesystem pcg32 cli11 linalg spdlog::spdlog
+)
+
+
+# Windows' math include does not define constants by default. Set this definition so it does. Also
+# set NOMINMAX so the min and max functions are not overwritten with macros.
+if(MSVC)
+target_compile_definitions(graphics_lib PUBLIC -D_USE_MATH_DEFINES -DNOMINMAX -DWIN32_LEAN_AND_MEAN)
+endif()
+
+
+target_include_directories(graphics_lib
+        PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include/${PROJECT_NAME}-${PROJECT_VERSION}>
+)
+
+# https://github.com/bshoshany/thread-pool/blob/master/thread_pool.hpp
+
+
+# ============================================================================
+# Create executables
+# ============================================================================
+add_executable(RT1_0_first_image src/RT1/RT1_0_first_image.cpp)
+target_link_libraries(RT1_0_first_image PRIVATE graphics_lib)
+
+
+add_executable(RT1_1_empty_backgound src/RT1/RT1_1_empty_backgound.cpp)
+target_link_libraries(RT1_1_empty_backgound PRIVATE graphics_lib)
+
+
+add_executable(RT1_2_first_sphere src/RT1/RT1_2_first_sphere.cpp)
+target_link_libraries(RT1_2_first_sphere PRIVATE graphics_lib)
+
+
+add_executable(RT1_3_sphere_with_normals src/RT1/RT1_3_sphere_with_normals.cpp)
+target_link_libraries(RT1_3_sphere_with_normals PRIVATE graphics_lib)
+
+
+add_executable(RT1_4_sphere_with_normals_with_ground src/RT1/RT1_4_sphere_with_normals_with_ground.cpp)
+target_link_libraries(RT1_4_sphere_with_normals_with_ground PRIVATE graphics_lib)
+
+
+add_executable(RT1_5_antialiasing src/RT1/RT1_5_antialiasing.cpp)
+target_link_libraries(RT1_5_antialiasing PRIVATE graphics_lib)
+
+
+add_executable(RT1_6_diffuse src/RT1/RT1_6_diffuse.cpp)
+target_link_libraries(RT1_6_diffuse PRIVATE graphics_lib)
+
+add_executable(RT1_7_metal src/RT1/RT1_7_metal.cpp)
+target_link_libraries(RT1_7_metal PRIVATE graphics_lib)
+
+
+# ============================================================================
+# Create an installable target
+#
+# this allows users to install and find darts_lib via `find_package()`.
+# ============================================================================
+
+string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
+
+packageProject(
+        NAME graphics_lib
+        VERSION ${PROJECT_VERSION}
+        NAMESPACE ${PROJECT_NAME}
+        BINARY_DIR ${PROJECT_BINARY_DIR}
+        INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
+        INCLUDE_DESTINATION include/${PROJECT_NAME}-${PROJECT_VERSION}
+        VERSION_HEADER "${VERSION_HEADER_LOCATION}"
+        COMPATIBILITY SameMajorVersion
+        DEPENDENCIES ""
+)
+
+# add the documentation/website subproject
+#add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/documentation ${CMAKE_BINARY_DIR}/documentation)

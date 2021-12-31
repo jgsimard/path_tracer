@@ -1,15 +1,19 @@
-#include <iostream>
-
-// ME
 #include "utils.h"
+#include "hittable_list.h"
+#include "sphere.h"
 #include "ray.h"
 
-Color ray_color(const Ray& ray) {
-//    Vec3 unit_direction = unit_vector(ray.direction());
-//    auto t = 0.5 * (unit_direction.y() + 1.0);
-    auto t = 0.5 * (ray.direction().y() + 1.0);
+
+Color ray_color(const Ray& ray, const Hittable& world) {
+    Hit_record hit_record;
+    if (world.hit(ray, 0, infinity, hit_record)){
+        return 0.5 * (hit_record.normal + Color(1,1,1));
+    }
+    Vec3 unit_direction = unit_vector(ray.direction());
+    double t = 0.5 * (unit_direction.y() + 1.0);
     return (1.0-t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
+
 
 int main() {
 
@@ -18,8 +22,12 @@ int main() {
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
 
-    // Camera
+    // World
+    Hittable_list world;
+    world.add(make_shared<Sphere>(Point3(0,-100.5, -1), 100));
+    world.add(make_shared<Sphere>(Point3(0,0,-1), 0.5));
 
+    // Camera
     auto viewport_height = 2.0;
     auto viewport_width = aspect_ratio * viewport_height;
     auto focal_length = 1.0;
@@ -30,20 +38,19 @@ int main() {
     Point3 lower_left_corner = origin - horizontal/2 - vertical/2 - Vec3(0, 0, focal_length);
 
     // Render
-
-    std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
+    fmt::print("P3\n{0} {1}\n255\n", image_width, image_height);
 
     for (int j = image_height-1; j >= 0; --j) {
-        std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
+        fmt::print(stderr, "\rScanlines remaining: {0}", j);
         for (int i = 0; i < image_width; ++i) {
             auto u = double(i) / (image_width-1);
             auto v = double(j) / (image_height-1);
-            auto direction = lower_left_corner + u*horizontal + v*vertical - origin;
+            auto direction = lower_left_corner + u * horizontal + v * vertical - origin;
 
             Ray ray(origin, direction);
-            Color pixel_color = ray_color(ray);
+            Color pixel_color = ray_color(ray, world);
             write_color(pixel_color);
         }
     }
-    std::cerr << "\nDone.\n";
+    fmt::print(stderr, "\nDone.\n");
 }

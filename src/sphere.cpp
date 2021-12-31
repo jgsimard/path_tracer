@@ -3,9 +3,10 @@
 //
 
 #include "sphere.h"
+#include <iostream>
 
 
-bool Sphere::hit(const Ray &ray, double t_min, double t_max, Hit_record &hit_record) const
+bool Sphere::hit(const Ray &ray, double t_min, double t_max, Hit_record& hit_record) const
 {
     Vec3 oc = ray.origin() - center_;
     double a = ray.direction().dot(ray.direction());
@@ -29,6 +30,7 @@ bool Sphere::hit(const Ray &ray, double t_min, double t_max, Hit_record &hit_rec
     hit_record.point = ray.at(hit_record.t);
     Vec3 outward_normal = (hit_record.point - center_) / radius_;
     hit_record.set_face_normal(ray, outward_normal);
+    hit_record.material_ptr = material_ptr_;
 
     return true;
 }

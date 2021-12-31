@@ -14,9 +14,6 @@ double random_double(){
     static std::mt19937 generator;
     return distribution(generator);
 }
-std::ostream& operator<<(std::ostream &out, const Vec3 &v) {
-    return out << v.x() << ' ' << v.y() << ' ' << v.z();
-}
 
 void write_color(Color pixel_color) {
     // Write the translated [0,255] value of each color component.
@@ -27,26 +24,63 @@ void write_color(Color pixel_color) {
 }
 
 
-
-void write_color(Color pixel_color, const int samples_per_pixels) {
-    // TODO optimize this
-    auto r = pixel_color.x();
-    auto g = pixel_color.y();
-    auto b = pixel_color.z();
-
+void write_color(const Color pixel_color, const int samples_per_pixels) {
     // Divide the color by the number of samples.
     auto scale = 1.0 / samples_per_pixels;
-    r *= scale;
-    g *= scale;
-    b *= scale;
+    Color pixel_color_adjusted = (pixel_color * scale).array().sqrt().matrix(); // sqrt for gamma correction
 
     // Write the translated [0,255] value of each color component.
     fmt::print("{0} {1} {2}\n",
-               static_cast<int>(256 * std::clamp(r, 0.0, 0.999)),
-               static_cast<int>(256 * std::clamp(g, 0.0, 0.999)),
-               static_cast<int>(256 * std::clamp(b, 0.0, 0.999)));
+               static_cast<int>(256 * std::clamp(pixel_color_adjusted.x(), 0.0, 0.999)),
+               static_cast<int>(256 * std::clamp(pixel_color_adjusted.y(), 0.0, 0.999)),
+               static_cast<int>(256 * std::clamp(pixel_color_adjusted.z(), 0.0, 0.999)));
 }
 
 Vec3 unit_vector(const Vec3& v){
     return v.normalized();
+}
+
+//Vec3 random_vec(){
+//    return ((Vec3::Random().array() + 1.0) / 2.0).matrix(); // the range of Random() is [-1, 1]
+//}
+
+Vec3 random_vec(){
+    return Vec3::Random(); // the range of Random() is [-1, 1]
+}
+
+Vec3 random_vec(double min, double max){
+    return ((Vec3::Random().array() + 1.0) * 0.5 * (max - min) + min).matrix();
+}
+
+Vec3 random_in_unit_sphere() {
+    while (true) {
+        auto v = Vec3::Random(); // the natural range is [-1, 1]
+        if (v.squaredNorm() >= 1) continue;
+        return v;
+    }
+}
+
+Vec3 random_unit_vector() {
+    return unit_vector(random_in_unit_sphere());
+}
+
+Vec3 random_in_hemisphere(const Vec3& normal) {
+    Vec3 in_unit_sphere = random_in_unit_sphere();
+    if (in_unit_sphere.dot(normal) > 0.0) // In the same hemisphere as the normal
+        return in_unit_sphere;
+    else
+        return -in_unit_sphere;
+}
+
+bool near_zero(const Vec3& v)  {
+    // Return true if the vector is close to zero in all dimensions.
+//    const auto s = 1e-8;
+//    return (fabs(v[0]) < s) && (fabs(v[1]) < s) && (fabs(v[2]) < s);
+    const auto s = 1e-6;
+    return v.squaredNorm() < s;
+}
+
+Vec3 reflect(const Vec3& v, const Vec3& normal)
+{ // draw a picture to get it, pretty easy to understand
+    return v - 2 * v.dot(normal) * normal;
 }

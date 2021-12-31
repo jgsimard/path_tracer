@@ -1,16 +1,17 @@
 //
 // Created by jeang on 2021-12-28.
 //
-
-#ifndef GRAPHICS_HITTABLE_H
-#define GRAPHICS_HITTABLE_H
+#pragma once
 
 #include "utils.h"
 #include "ray.h"
 
+class Material;
+
 struct Hit_record{
     Point3 point;
     Vec3 normal;
+    shared_ptr<Material> material_ptr;
     double t;
     bool front_face;
 
@@ -24,4 +25,3 @@ class Hittable{
 public:
     virtual bool hit(const Ray& ray, double t_min, double t_max, Hit_record& hit_record) const = 0;
 };
-#endif //GRAPHICS_HITTABLE_H
