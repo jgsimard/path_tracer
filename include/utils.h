@@ -59,3 +59,4 @@ Vec3 reflect(const Vec3& v, const Vec3& normal);
 
 Vec3 refract(const Vec3& v_in, const Vec3& normal, double ratio_index_of_refraction);
 
+Vec3 random_in_unit_disk();

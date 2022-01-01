@@ -3,12 +3,10 @@
 #include "sphere.h"
 #include "ray.h"
 #include "camera.h"
-//#include "materials/material.h"
 #include "materials/metal.h"
 #include "materials/lambertian.h"
 #include "materials/dielectric.h"
 
-#include <fmt/core.h>
 
 // diffuse version 1 : spherical scattering
 Color ray_color(const Ray& ray, const Hittable& world, int depth) {
@@ -39,18 +37,59 @@ int main() {
     const int samples_per_pixels = 100;
     const int max_depth = 50;
 
+//    // World
+//    auto R = cos(pi/4);
+//    HittableList world;
+//
+//    auto material_left  = make_shared<Lambertian>(Color(0,0,1));
+//    auto material_right = make_shared<Lambertian>(Color(1,0,0));
+//
+//    world.add(make_shared<Sphere>(Point3(-R, 0, -1), R, material_left));
+//    world.add(make_shared<Sphere>(Point3( R, 0, -1), R, material_right));
+//
+//    // Camera
+//    Camera camera(90.0, aspect_ratio);
+
+
     // World
-    auto R = cos(pi/4);
     HittableList world;
 
-    auto material_left  = make_shared<Lambertian>(Color(0,0,1));
-    auto material_right = make_shared<Lambertian>(Color(1,0,0));
+    auto material_ground = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
+    auto material_center = make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
+    auto material_left   = make_shared<Dielectric>(1.5);
+    auto material_right  = make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.0);
 
-    world.add(make_shared<Sphere>(Point3(-R, 0, -1), R, material_left));
-    world.add(make_shared<Sphere>(Point3( R, 0, -1), R, material_right));
+    world.add(make_shared<Sphere>(Point3( 0.0, -100.5, -1.0), 100.0, material_ground));
+    world.add(make_shared<Sphere>(Point3( 0.0,    0.0, -1.0),   0.5, material_center));
+    world.add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0),   0.5, material_left));
+    world.add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0), -0.45, material_left));
+    world.add(make_shared<Sphere>(Point3( 1.0,    0.0, -1.0),   0.5, material_right));
+
+//    // Camera
+//    Camera camera(Point3(-2,2,1), Point3(0,0,-1), Vec3(0,1,0), 90, aspect_ratio);
+
+//    // Camera
+//    Camera camera(Point3(-2,2,1), Point3(0,0,-1), Vec3(0,1,0), 20, aspect_ratio);
+
+//    // Camera
+//    Point3 lookfrom(3,3,2);
+//    Point3 lookat(0,0,-1);
+//    Vec3 vup(0,1,0);
+//    auto dist_to_focus = (lookfrom-lookat).norm();
+//    auto aperture = 2.0;
+//
+//    Camera camera(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
 
     // Camera
-    Camera camera;
+    Point3 lookfrom(3,3,2);
+    Point3 lookat(0,0,-1);
+    Vec3 vup(0,1,0);
+    auto dist_to_focus = (lookfrom-lookat).norm();
+    auto aperture = 0.0;
+
+    Camera camera(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
+
+
 
     // Render
     fmt::print("P3\n{0} {1}\n255\n", image_width, image_height);

@@ -96,3 +96,13 @@ Vec3 refract(const Vec3& v_in, const Vec3& normal, double ratio_index_of_refract
     Vec3 v_out_parallel = -sqrt(std::abs(1- v_out_perp.squaredNorm())) * normal;
     return v_out_perp + v_out_parallel;
 }
+
+Vec3 random_in_unit_disk()
+{
+    while(true){
+        auto v = random_vec();
+        v.z() = 0.0;
+        if (v.squaredNorm() >= 1.0) continue;
+        return v;
+    }
+}
