@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(graphics
+project(path_tracer
         VERSION 1.0
         LANGUAGES CXX)
 
@@ -22,25 +22,28 @@ add_compile_options(
 )
 
 # ============================================================================
-# Create graphics library
+# Create path_tracer_lib library
 # ============================================================================
 #include_directories(
 #        include
 #)
 
-add_library(graphics_lib
+add_library(path_tracer_lib
         src/utils.cpp
         src/camera.cpp
         src/hittable_list.cpp
         src/sphere.cpp
-        src/materials/lambertian.cpp include/forward_declarations.h)
+        src/materials/lambertian.cpp
+        src/materials/dielectric.cpp
+        src/materials/metal.cpp
+        )
 
 # being a cross-platform target, we enforce standards conformance on MSVC
-target_compile_options(graphics_lib PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
+target_compile_options(path_tracer_lib PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
 
 # Link dependencies
 target_link_libraries(
-        graphics_lib
+        path_tracer_lib
         PRIVATE stb Threads::Threads tinyobjloader tinyexr
         PUBLIC fmt::fmt nlohmann_json filesystem pcg32 cli11 linalg spdlog::spdlog
 )
@@ -49,11 +52,11 @@ target_link_libraries(
 # Windows' math include does not define constants by default. Set this definition so it does. Also
 # set NOMINMAX so the min and max functions are not overwritten with macros.
 if(MSVC)
-target_compile_definitions(graphics_lib PUBLIC -D_USE_MATH_DEFINES -DNOMINMAX -DWIN32_LEAN_AND_MEAN)
+target_compile_definitions(path_tracer_lib PUBLIC -D_USE_MATH_DEFINES -DNOMINMAX -DWIN32_LEAN_AND_MEAN)
 endif()
 
 
-target_include_directories(graphics_lib
+target_include_directories(path_tracer_lib
         PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include/${PROJECT_NAME}-${PROJECT_VERSION}>
@@ -66,37 +69,37 @@ target_include_directories(graphics_lib
 # Create executables
 # ============================================================================
 add_executable(RT1_0_first_image src/RT1/RT1_0_first_image.cpp)
-target_link_libraries(RT1_0_first_image PRIVATE graphics_lib)
+target_link_libraries(RT1_0_first_image PRIVATE path_tracer_lib)
 
 
 add_executable(RT1_1_empty_backgound src/RT1/RT1_1_empty_backgound.cpp)
-target_link_libraries(RT1_1_empty_backgound PRIVATE graphics_lib)
+target_link_libraries(RT1_1_empty_backgound PRIVATE path_tracer_lib)
 
 
 add_executable(RT1_2_first_sphere src/RT1/RT1_2_first_sphere.cpp)
-target_link_libraries(RT1_2_first_sphere PRIVATE graphics_lib)
+target_link_libraries(RT1_2_first_sphere PRIVATE path_tracer_lib)
 
 
 add_executable(RT1_3_sphere_with_normals src/RT1/RT1_3_sphere_with_normals.cpp)
-target_link_libraries(RT1_3_sphere_with_normals PRIVATE graphics_lib)
+target_link_libraries(RT1_3_sphere_with_normals PRIVATE path_tracer_lib)
 
 
 add_executable(RT1_4_sphere_with_normals_with_ground src/RT1/RT1_4_sphere_with_normals_with_ground.cpp)
-target_link_libraries(RT1_4_sphere_with_normals_with_ground PRIVATE graphics_lib)
+target_link_libraries(RT1_4_sphere_with_normals_with_ground PRIVATE path_tracer_lib)
 
 
 add_executable(RT1_5_antialiasing src/RT1/RT1_5_antialiasing.cpp)
-target_link_libraries(RT1_5_antialiasing PRIVATE graphics_lib)
+target_link_libraries(RT1_5_antialiasing PRIVATE path_tracer_lib)
 
 
 add_executable(RT1_6_diffuse src/RT1/RT1_6_diffuse.cpp)
-target_link_libraries(RT1_6_diffuse PRIVATE graphics_lib)
+target_link_libraries(RT1_6_diffuse PRIVATE path_tracer_lib)
 
 add_executable(RT1_7_metal src/RT1/RT1_7_metal.cpp)
-target_link_libraries(RT1_7_metal PRIVATE graphics_lib)
+target_link_libraries(RT1_7_metal PRIVATE path_tracer_lib)
 
 add_executable(RT1_8_dielectrics src/RT1/RT1_8_dielectrics.cpp)
-target_link_libraries(RT1_8_dielectrics PRIVATE graphics_lib)
+target_link_libraries(RT1_8_dielectrics PRIVATE path_tracer_lib)
 
 
 # ============================================================================
@@ -108,7 +111,7 @@ target_link_libraries(RT1_8_dielectrics PRIVATE graphics_lib)
 string(TOLOWER ${PROJECT_NAME}/version.h VERSION_HEADER_LOCATION)
 
 packageProject(
-        NAME graphics_lib
+        NAME path_tracer_lib
         VERSION ${PROJECT_VERSION}
         NAMESPACE ${PROJECT_NAME}
         BINARY_DIR ${PROJECT_BINARY_DIR}

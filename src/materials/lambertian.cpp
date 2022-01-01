@@ -4,7 +4,6 @@
 
 #include "materials/lambertian.h"
 
-
 bool Lambertian::scatter(const Ray& ray_in, const HitRecord& hit_record, Color& attenuation, Ray& scattered) const
 {
     Vec3 scatter_direction = hit_record.point + hit_record.normal + random_unit_vector();
@@ -12,7 +11,6 @@ bool Lambertian::scatter(const Ray& ray_in, const HitRecord& hit_record, Color& 
     // Catch degenerate scatter direction
     if (near_zero(scatter_direction))
         scatter_direction = hit_record.normal;
-
 
     scattered = Ray(hit_record.point, scatter_direction);
     attenuation = albedo_;

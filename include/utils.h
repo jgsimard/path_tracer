@@ -26,6 +26,7 @@ const double pi = 3.141592653589793;
 
 // Utility Functions
 double degrees_to_radians(double degrees);
+double radians_to_degrees(double radians);
 
 double random_double();
 
