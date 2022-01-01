@@ -30,22 +30,6 @@ Color ray_color(const Ray& ray, const Hittable& world, int depth) {
     return (1.0-t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
 
-////diffuse version 2 : hemispherical scattering
-//Color ray_color2(const Ray& ray, const Hittable& world, int depth) {
-//    HitRecord hit_record;
-//    // If we've exceeded the ray bounce limit, no more light is gathered.
-//    if (depth <= 0)
-//        return Color(0,0,0);
-//
-//    if (world.hit(ray, 0.001, infinity, hit_record)){ // use a tolerance
-//        Point3 target = hit_record.point + random_in_hemisphere(hit_record.point);
-//        return 0.5 * ray_color(Ray(hit_record.point, target - hit_record.point), world, depth - 1);
-//    }
-//    Vec3 unit_direction = unit_vector(ray.direction());
-//    double t = 0.5 * (unit_direction.y() + 1.0);
-//    return (1.0-t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
-//}
-
 
 int main() {
     // Image
@@ -56,22 +40,14 @@ int main() {
     const int max_depth = 50;
 
     // World
+    auto R = cos(pi/4);
     HittableList world;
 
-    auto material_ground = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
-//    auto material_center = make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
-//    auto material_left   = make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.0);
-//    auto material_center = make_shared<Dielectric>(1.5);
-    auto material_center = make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
-    auto material_left   = make_shared<Dielectric>(1.5);
-    auto material_right  = make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.0);
+    auto material_left  = make_shared<Lambertian>(Color(0,0,1));
+    auto material_right = make_shared<Lambertian>(Color(1,0,0));
 
-    world.add(make_shared<Sphere>(Point3( 0.0, -100.5, -1.0), 100.0, material_ground));
-    world.add(make_shared<Sphere>(Point3( 0.0,    0.0, -1.0),   0.5, material_center));
-    world.add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0),   0.5, material_left));
-    // the negative sign on the radius is used to make a hollow glass sphere because it inverses the surface normal
-    world.add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0),   -0.4, material_left));
-    world.add(make_shared<Sphere>(Point3( 1.0,    0.0, -1.0),   0.5, material_right));
+    world.add(make_shared<Sphere>(Point3(-R, 0, -1), R, material_left));
+    world.add(make_shared<Sphere>(Point3( R, 0, -1), R, material_right));
 
     // Camera
     Camera camera;

@@ -24,7 +24,7 @@ int main() {
     const int samples_per_pixels = 100;
 
     // World
-    Hittable_list world;
+    HittableList world;
     world.add(make_shared<Sphere>(Point3(0,-1000.5, -1), 1000));
     world.add(make_shared<Sphere>(Point3(0,0,-1), 0.5));
 

@@ -5,7 +5,7 @@
 #include "hittable_list.h"
 #include <fmt/core.h>
 
-bool Hittable_list::hit(const Ray &ray, double t_min, double t_max, HitRecord &hit_record) const
+bool HittableList::hit(const Ray &ray, double t_min, double t_max, HitRecord &hit_record) const
 {
     HitRecord temp_hit_record;
     bool hit_anything = false;

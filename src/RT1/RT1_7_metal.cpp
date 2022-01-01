@@ -55,7 +55,7 @@ int main() {
     const int max_depth = 50;
 
     // World
-    Hittable_list world;
+    HittableList world;
 
     auto material_ground = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
     auto material_center = make_shared<Lambertian>(Color(0.7, 0.3, 0.3));

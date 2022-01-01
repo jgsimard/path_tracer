@@ -13,10 +13,10 @@ using std::shared_ptr;
 using std::make_shared;
 using std::vector;
 
-class Hittable_list : public Hittable{
+class HittableList : public Hittable{
 public:
-    Hittable_list() {};
-    Hittable_list(shared_ptr<Hittable> hittable){ add(hittable);}
+    HittableList() {};
+    HittableList(shared_ptr<Hittable> hittable){ add(hittable);}
 
     virtual bool hit(const Ray& ray, double t_min, double t_max, HitRecord& hit_record) const override;
 

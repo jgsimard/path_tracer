@@ -9,6 +9,7 @@
 class Camera{
 public:
     Camera();
+    Camera(double vertical_field_of_view, double aspect_ratio);
 
     Ray get_ray(double u, double v);
 

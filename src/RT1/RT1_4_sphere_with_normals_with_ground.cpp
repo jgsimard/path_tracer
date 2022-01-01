@@ -23,7 +23,7 @@ int main() {
     const int image_height = static_cast<int>(image_width / aspect_ratio);
 
     // World
-    Hittable_list world;
+    HittableList world;
     world.add(make_shared<Sphere>(Point3(0,-100.5, -1), 100));
     world.add(make_shared<Sphere>(Point3(0,0,-1), 0.5));
 

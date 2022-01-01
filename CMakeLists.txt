@@ -101,6 +101,9 @@ target_link_libraries(RT1_7_metal PRIVATE path_tracer_lib)
 add_executable(RT1_8_dielectrics src/RT1/RT1_8_dielectrics.cpp)
 target_link_libraries(RT1_8_dielectrics PRIVATE path_tracer_lib)
 
+add_executable(RT1_9_camera src/RT1/RT1_9_camera.cpp)
+target_link_libraries(RT1_9_camera PRIVATE path_tracer_lib)
+
 
 # ============================================================================
 # Create an installable target
