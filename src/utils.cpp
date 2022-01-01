@@ -3,6 +3,7 @@
 //
 
 #include "utils.h"
+#include "vec.h"
 
 // Utility Functions
 double degrees_to_radians(double degrees) {
@@ -40,9 +41,6 @@ void write_color(const Color pixel_color, const int samples_per_pixels) {
                static_cast<int>(256 * std::clamp(pixel_color_adjusted.z(), 0.0, 0.999)));
 }
 
-Vec3 unit_vector(const Vec3& v){
-    return v.normalized();
-}
 
 //Vec3 random_vec(){
 //    return ((Vec3::Random().array() + 1.0) / 2.0).matrix(); // the range of Random() is [-1, 1]
@@ -70,7 +68,7 @@ Vec3 random_unit_vector() {
 
 Vec3 random_in_hemisphere(const Vec3& normal) {
     Vec3 in_unit_sphere = random_in_unit_sphere();
-    if (in_unit_sphere.dot(normal) > 0.0) // In the same hemisphere as the normal
+    if (dot(in_unit_sphere, normal) > 0.0) // In the same hemisphere as the normal
         return in_unit_sphere;
     else
         return -in_unit_sphere;
@@ -86,12 +84,12 @@ bool near_zero(const Vec3& v)  {
 
 Vec3 reflect(const Vec3& v, const Vec3& normal)
 { // draw a picture to get it, pretty easy to understand
-    return v - 2 * v.dot(normal) * normal;
+    return v - 2 * dot(v, normal) * normal;
 }
 
 Vec3 refract(const Vec3& v_in, const Vec3& normal, double ratio_index_of_refraction)
 {
-    double cos_theta = std::min(-v_in.dot(normal), 1.0);
+    double cos_theta = std::min(dot(-v_in, normal), 1.0);
     Vec3 v_out_perp = ratio_index_of_refraction * (v_in + cos_theta * normal );
     Vec3 v_out_parallel = -sqrt(std::abs(1- v_out_perp.squaredNorm())) * normal;
     return v_out_perp + v_out_parallel;
@@ -106,3 +104,4 @@ Vec3 random_in_unit_disk()
         return v;
     }
 }
+

@@ -3,6 +3,7 @@
 //
 
 #include "camera.h"
+#include "vec.h"
 
 
 Camera::Camera(){
@@ -26,8 +27,8 @@ Camera::Camera(Point3 look_from, Point3 look_at, Vec3 view_up, double vertical_f
 
     // create an orthonormal basis for the camera
     auto w = unit_vector(look_from - look_at); // z
-    auto u = unit_vector(view_up.cross(w)); // x
-    auto v = w.cross(u); // y
+    auto u = unit_vector(cross(view_up, w)); // x
+    auto v = cross(w, u); // y
 
     origin_ = look_from;
     horizontal_ = viewport_width * u;
@@ -52,8 +53,8 @@ Camera::Camera(
 
     // create an orthonormal basis for the camera
     w_ = unit_vector(look_from - look_at); // z
-    u_ = unit_vector(view_up.cross(w_)); // x
-    v_ = w_.cross(u_); // y
+    u_ = unit_vector(cross(view_up, w_)); // x
+    v_ = cross(w_, u_); // y
 
     origin_ = look_from;
     horizontal_ = focus_distance * viewport_width * u_;

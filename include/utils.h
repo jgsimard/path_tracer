@@ -14,6 +14,9 @@
 // fast IO
 #include <fmt/core.h>
 
+//ME
+#include "vec.h"
+
 
 // Usings
 using std::shared_ptr;
@@ -30,18 +33,12 @@ double radians_to_degrees(double radians);
 
 double random_double();
 
-// vectors that will be used and related functions
-using Vec3 = Eigen::Vector3d;
-using Point3 = Eigen::Vector3d;
-using Color = Eigen::Vector3d;
 
 //inline std::ostream& operator<<(std::ostream &out, const Vec3 &v);
 
 void write_color(Color pixel_color);
 
 void write_color(Color pixel_color, int samples_per_pixels);
-
-Vec3 unit_vector(const Vec3& v);
 
 Vec3 random_vec();
 
@@ -60,3 +57,4 @@ Vec3 reflect(const Vec3& v, const Vec3& normal);
 Vec3 refract(const Vec3& v_in, const Vec3& normal, double ratio_index_of_refraction);
 
 Vec3 random_in_unit_disk();
+

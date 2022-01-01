@@ -3,15 +3,14 @@
 //
 
 #include "sphere.h"
-#include <iostream>
-
 
 bool Sphere::hit(const Ray &ray, double t_min, double t_max, HitRecord& hit_record) const
 {
     Vec3 oc = ray.origin() - center_;
-    double a = ray.direction().dot(ray.direction());
-    double half_b = oc.dot(ray.direction()); // using half_b results in less computation for the same retults
-    double c = oc.dot(oc) - radius_*radius_;
+    double a = dot(ray.direction(), ray.direction());
+    double half_b = dot(oc, ray.direction()); // using half_b results in less computation for the same retults
+//    double c = dot(oc, oc) - radius_*radius_;
+    double c = dot(oc, oc) - radius_square_;
     double discriminant = half_b * half_b - a * c;
     if (discriminant < 0) // does not touch
         return false;

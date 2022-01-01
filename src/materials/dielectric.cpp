@@ -3,6 +3,7 @@
 //
 
 #include "materials/dielectric.h"
+#include "vec.h"
 
 bool Dielectric::scatter(const Ray& ray_in, const HitRecord& hit_record, Color& attenuation, Ray& scattered) const
 {
@@ -11,7 +12,7 @@ bool Dielectric::scatter(const Ray& ray_in, const HitRecord& hit_record, Color& 
 
     Vec3 unit_direction = unit_vector(ray_in.direction());
 
-    double cos_theta = std::min(-unit_direction.dot(hit_record.normal), 1.0);
+    double cos_theta = std::min(dot(-unit_direction, hit_record.normal), 1.0);
     double sin_theta = sqrt(1.0 - cos_theta * cos_theta);
 
     bool total_internal_reflection = ratio_index_of_refraction * sin_theta >= 1.0;

@@ -29,6 +29,7 @@ add_compile_options(
 #)
 
 add_library(path_tracer_lib
+        src/vec.cpp
         src/utils.cpp
         src/camera.cpp
         src/hittable_list.cpp
@@ -103,6 +104,9 @@ target_link_libraries(RT1_8_dielectrics PRIVATE path_tracer_lib)
 
 add_executable(RT1_9_camera src/RT1/RT1_9_camera.cpp)
 target_link_libraries(RT1_9_camera PRIVATE path_tracer_lib)
+
+add_executable(RT1_10_final src/RT1/RT1_10_final.cpp)
+target_link_libraries(RT1_10_final PRIVATE path_tracer_lib)
 
 
 # ============================================================================

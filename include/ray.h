@@ -3,23 +3,25 @@
 //
 #pragma once
 
-#include "utils.h"
+#include <utility>
+
+#include "vec.h"
 
 class Ray {
 public:
-    Ray() {}
-    Ray(const Point3& origin, const Vec3& direction)
-            : orig(origin), dir(direction)
+    Ray() = default;
+    Ray(Point3  origin, Vec3  direction)
+            : origin_(std::move(origin)), direction_(std::move(direction))
     {}
 
-    Point3 origin() const  { return orig; }
-    Vec3 direction() const { return dir; }
+    [[nodiscard]] Point3 origin() const  { return origin_; }
+    [[nodiscard]] Vec3 direction() const { return direction_; }
 
-    Point3 at(double t) const {
-        return orig + t * dir;
+    [[nodiscard]] Point3 at(double t) const {
+        return origin_ + t * direction_;
     }
 
-public:
-    Point3 orig;
-    Vec3 dir;
+private:
+    Point3 origin_;
+    Vec3 direction_;
 };
