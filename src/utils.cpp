@@ -84,3 +84,11 @@ Vec3 reflect(const Vec3& v, const Vec3& normal)
 { // draw a picture to get it, pretty easy to understand
     return v - 2 * v.dot(normal) * normal;
 }
+
+Vec3 refract(const Vec3& v_in, const Vec3& normal, double ratio_index_of_refraction)
+{
+    double cos_theta = std::min(-v_in.dot(normal), 1.0);
+    Vec3 v_out_perp = ratio_index_of_refraction * (v_in + cos_theta * normal );
+    Vec3 v_out_parallel = -sqrt(std::abs(1- v_out_perp.squaredNorm())) * normal;
+    return v_out_perp + v_out_parallel;
+}

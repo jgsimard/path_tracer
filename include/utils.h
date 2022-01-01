@@ -56,3 +56,5 @@ bool near_zero(const Vec3& v);
 
 Vec3 reflect(const Vec3& v, const Vec3& normal);
 
+Vec3 refract(const Vec3& v_in, const Vec3& normal, double ratio_index_of_refraction);
+

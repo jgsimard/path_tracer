@@ -95,6 +95,9 @@ target_link_libraries(RT1_6_diffuse PRIVATE graphics_lib)
 add_executable(RT1_7_metal src/RT1/RT1_7_metal.cpp)
 target_link_libraries(RT1_7_metal PRIVATE graphics_lib)
 
+add_executable(RT1_8_dielectrics src/RT1/RT1_8_dielectrics.cpp)
+target_link_libraries(RT1_8_dielectrics PRIVATE graphics_lib)
+
 
 # ============================================================================
 # Create an installable target
