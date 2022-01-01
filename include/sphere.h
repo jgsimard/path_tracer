@@ -13,7 +13,7 @@ public:
     Sphere(Point3 center, double radius) : center_(std::move(center)), radius_(radius) {}; // so that the past stuff can still run
     Sphere(Point3 center, double radius, shared_ptr<Material> material) : center_(std::move(center)), radius_(radius), material_ptr_(std::move(material)) {};
 
-    virtual bool hit(const Ray& ray, double t_min, double t_max, Hit_record& hit_record) const override;
+    virtual bool hit(const Ray& ray, double t_min, double t_max, HitRecord& hit_record) const override;
 
     Point3 center_;
     double radius_;

@@ -33,7 +33,7 @@ add_library(graphics_lib
         src/camera.cpp
         src/hittable_list.cpp
         src/sphere.cpp
-        include/material.h)
+        src/materials/lambertian.cpp include/forward_declarations.h)
 
 # being a cross-platform target, we enforce standards conformance on MSVC
 target_compile_options(graphics_lib PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")

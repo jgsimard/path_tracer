@@ -5,9 +5,9 @@
 #include "hittable_list.h"
 #include <fmt/core.h>
 
-bool Hittable_list::hit(const Ray &ray, double t_min, double t_max, Hit_record &hit_record) const
+bool Hittable_list::hit(const Ray &ray, double t_min, double t_max, HitRecord &hit_record) const
 {
-    Hit_record temp_hit_record;
+    HitRecord temp_hit_record;
     bool hit_anything = false;
     double closest_so_far = t_max;
     for (const auto& hittable : hittables){

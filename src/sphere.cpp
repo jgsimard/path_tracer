@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-bool Sphere::hit(const Ray &ray, double t_min, double t_max, Hit_record& hit_record) const
+bool Sphere::hit(const Ray &ray, double t_min, double t_max, HitRecord& hit_record) const
 {
     Vec3 oc = ray.origin() - center_;
     double a = ray.direction().dot(ray.direction());

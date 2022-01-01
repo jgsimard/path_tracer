@@ -18,7 +18,7 @@ public:
     Hittable_list() {};
     Hittable_list(shared_ptr<Hittable> hittable){ add(hittable);}
 
-    virtual bool hit(const Ray& ray, double t_min, double t_max, Hit_record& hit_record) const override;
+    virtual bool hit(const Ray& ray, double t_min, double t_max, HitRecord& hit_record) const override;
 
 
     void clear(){hittables.clear();};

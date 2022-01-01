@@ -3,13 +3,16 @@
 #include "sphere.h"
 #include "ray.h"
 #include "camera.h"
-#include "material.h"
+//#include "materials/material.h"
+#include "materials/metal.h"
+#include "materials/lambertian.h"
+#include "materials/dielectric.h"
 
 #include <fmt/core.h>
 
 // diffuse version 1 : spherical scattering
 Color ray_color(const Ray& ray, const Hittable& world, int depth) {
-    Hit_record hit_record;
+    HitRecord hit_record;
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth <= 0)
         return Color(0,0,0);
@@ -29,7 +32,7 @@ Color ray_color(const Ray& ray, const Hittable& world, int depth) {
 
 ////diffuse version 2 : hemispherical scattering
 //Color ray_color2(const Ray& ray, const Hittable& world, int depth) {
-//    Hit_record hit_record;
+//    HitRecord hit_record;
 //    // If we've exceeded the ray bounce limit, no more light is gathered.
 //    if (depth <= 0)
 //        return Color(0,0,0);
@@ -66,6 +69,7 @@ int main() {
     world.add(make_shared<Sphere>(Point3( 0.0, -100.5, -1.0), 100.0, material_ground));
     world.add(make_shared<Sphere>(Point3( 0.0,    0.0, -1.0),   0.5, material_center));
     world.add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0),   0.5, material_left));
+    // the negative sign on the radius is used to make a hollow glass sphere because it inverses the surface normal
     world.add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0),   -0.4, material_left));
     world.add(make_shared<Sphere>(Point3( 1.0,    0.0, -1.0),   0.5, material_right));
 

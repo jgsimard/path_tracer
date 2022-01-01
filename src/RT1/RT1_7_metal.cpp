@@ -3,13 +3,15 @@
 #include "sphere.h"
 #include "ray.h"
 #include "camera.h"
-#include "material.h"
+#include "materials/material.h"
+#include "metal.h"
+#include "lambertian.h"
 
 #include <fmt/core.h>
 
 // diffuse version 1 : spherical scattering
 Color ray_color(const Ray& ray, const Hittable& world, int depth) {
-    Hit_record hit_record;
+    HitRecord hit_record;
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth <= 0)
         return Color(0,0,0);
@@ -29,7 +31,7 @@ Color ray_color(const Ray& ray, const Hittable& world, int depth) {
 
 ////diffuse version 2 : hemispherical scattering
 //Color ray_color2(const Ray& ray, const Hittable& world, int depth) {
-//    Hit_record hit_record;
+//    HitRecord hit_record;
 //    // If we've exceeded the ray bounce limit, no more light is gathered.
 //    if (depth <= 0)
 //        return Color(0,0,0);

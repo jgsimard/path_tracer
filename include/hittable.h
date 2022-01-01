@@ -8,7 +8,7 @@
 
 class Material;
 
-struct Hit_record{
+struct HitRecord{
     Point3 point;
     Vec3 normal;
     shared_ptr<Material> material_ptr;
@@ -23,5 +23,5 @@ struct Hit_record{
 
 class Hittable{
 public:
-    virtual bool hit(const Ray& ray, double t_min, double t_max, Hit_record& hit_record) const = 0;
+    virtual bool hit(const Ray& ray, double t_min, double t_max, HitRecord& hit_record) const = 0;
 };
