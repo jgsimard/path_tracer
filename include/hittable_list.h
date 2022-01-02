@@ -15,16 +15,17 @@ using std::vector;
 
 class HittableList : public Hittable{
 public:
-    HittableList() {};
+    HittableList() = default;
     HittableList(shared_ptr<Hittable> hittable){ add(hittable);}
 
-    virtual bool hit(const Ray& ray, double t_min, double t_max, HitRecord& hit_record) const override;
+    bool hit(const Ray& ray, double t_min, double t_max, HitRecord& hit_record) const override;
+    bool bounding_box(double time0, double time1, AABB& output_box) const override;
 
 
-    void clear(){hittables.clear();};
-    void add(shared_ptr<Hittable> hittable){hittables.push_back(hittable);};
+    void clear(){hittables_.clear();};
+    void add(shared_ptr<Hittable> hittable){hittables_.push_back(hittable);};
 
 
-    vector<shared_ptr<Hittable>> hittables;
+    vector<shared_ptr<Hittable>> hittables_;
 };
 

@@ -54,6 +54,10 @@ Vec3 random_vec(double min, double max){
     return ((Vec3::Random().array() + 1.0) * 0.5 * (max - min) + min).matrix();
 }
 
+//Vec3 random_vec(double min, double max){
+//    return ((Vec3::Random().array() + 1.0) * 0.5 * (max - min) + min).matrix();
+//}
+
 Vec3 random_in_unit_sphere() {
     while (true) {
         auto v = Vec3::Random(); // the natural range is [-1, 1]
@@ -103,5 +107,13 @@ Vec3 random_in_unit_disk()
         if (v.squaredNorm() >= 1.0) continue;
         return v;
     }
+}
+
+int random_int(int min, int max) {
+    // TODO fix this
+    // Returns a random integer in [min,max].
+    static std::uniform_int_distribution<int> distribution_int(0, 2);
+    static std::mt19937 generator_int;
+    return distribution_int(generator_int);
 }
 

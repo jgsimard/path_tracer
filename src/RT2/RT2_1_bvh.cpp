@@ -7,7 +7,12 @@
 #include "materials/lambertian.h"
 #include "materials/dielectric.h"
 
+#include "axis_aligned_bounding_box.h"
+#include "bounding_volume_hierarchy.h"
+
 #include <chrono>
+#include <omp.h>
+#include <Eigen/Dense>
 
 
 // diffuse version 1 : spherical scattering
@@ -77,10 +82,23 @@ HittableList random_scene() {
     auto material3 = make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0);
     world.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
 
-    return world;
+//    return world;
+    fmt::print(stderr, "Building BVH ...");
+    auto start_time = std::chrono::steady_clock::now();
+
+    auto out = HittableList(make_shared<BvhNode>(world, 0.0, 1.0));
+
+    auto final_time = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = final_time - start_time;
+    fmt::print(stderr, "\rBuilding BVH ... Done. Took {0} s\n", elapsed_seconds.count());
+
+    return out;
 }
 
+
+
 int main() {
+//    omp_set_num_threads(4);
     // Image
 //    const auto aspect_ratio = 3.0 / 2.0;
 //    const int image_width = 1200;
@@ -120,15 +138,15 @@ int main() {
     for (int j = image_height-1; j >= 0; --j) {
         fmt::print(stderr, "\rScanlines remaining: {0}", j);
         for (int i = 0; i < image_width; ++i) {
-            Color pixel_Color(0, 0, 0);
+            Color pixel_color(0, 0, 0);
             for(int s = 0; s < samples_per_pixels; ++s){
                 auto u = double(i + random_double()) / (image_width-1);
                 auto v = double(j + random_double()) / (image_height-1);
 
                 Ray ray = camera.get_ray(u,v);
-                pixel_Color += ray_color(ray, world, max_depth);
+                pixel_color = pixel_color + ray_color(ray, world, max_depth);
             }
-            write_color(pixel_Color, samples_per_pixels);
+            write_color(pixel_color, samples_per_pixels);
         }
     }
     auto final_time = std::chrono::steady_clock::now();

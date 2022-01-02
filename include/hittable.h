@@ -5,6 +5,7 @@
 
 #include "utils.h"
 #include "ray.h"
+#include "axis_aligned_bounding_box.h"
 
 class Material;
 
@@ -24,4 +25,5 @@ struct HitRecord{
 class Hittable{
 public:
     virtual bool hit(const Ray& ray, double t_min, double t_max, HitRecord& hit_record) const = 0;
+    virtual bool bounding_box(double time0, double time1, AABB& output_box) const = 0;
 };

@@ -21,3 +21,16 @@ Vec3 unit_vector(const Vec3& v);
 double dot(const Vec3& v1, const Vec3& v2);
 
 Vec3 cross(const Vec3& v1, const Vec3& v2);
+
+//inline Vec3 unit_vector(const Vec3& v){
+//    return v.normalized();
+//}
+//
+//inline double dot(const Vec3& v1, const Vec3& v2){
+//    return v1.dot(v2);
+//}
+//
+//inline Vec3 cross(const Vec3& v1, const Vec3& v2)
+//{
+//    return v1.cross(v2);
+//}

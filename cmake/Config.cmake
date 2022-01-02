@@ -173,7 +173,7 @@ include_directories(
 # ============================================================================
 # compile the rest of the codebase using C++17
 # ============================================================================
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # CPMAddPackage( NAME CPMLicenses.cmake GITHUB_REPOSITORY cpm-cmake/CPMLicenses.cmake VERSION 0.0.5

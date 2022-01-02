@@ -13,7 +13,9 @@ public:
     Sphere(Point3 center, double radius, shared_ptr<Material> material) : center_(std::move(center)), radius_(radius), radius_square_(radius*radius), material_ptr_(std::move(material)) {};
 
     virtual bool hit(const Ray& ray, double t_min, double t_max, HitRecord& hit_record) const override;
+    virtual bool bounding_box(double time0, double time1, AABB& output_box) const override;
 
+private:
     Point3 center_;
     double radius_;
     double radius_square_;

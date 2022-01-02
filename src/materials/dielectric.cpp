@@ -10,7 +10,7 @@ bool Dielectric::scatter(const Ray& ray_in, const HitRecord& hit_record, Color& 
     attenuation = Color(1.0, 1.0, 1.0);
     double ratio_index_of_refraction = hit_record.front_face ? 1.0 / index_of_refraction_ : index_of_refraction_; // assume the outside is air, TODO : change this!!!
 
-    Vec3 unit_direction = unit_vector(ray_in.direction());
+    Vec3 unit_direction = ray_in.direction(); // ray_in.direction() is a unit vector by constuction
 
     double cos_theta = std::min(dot(-unit_direction, hit_record.normal), 1.0);
     double sin_theta = sqrt(1.0 - cos_theta * cos_theta);

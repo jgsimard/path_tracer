@@ -13,6 +13,7 @@ include(cmake/Config.cmake)
 # compilation options for faster result and better practive
 add_compile_options(
 #        -fmodules-ts # enables modules g++-11 only
+#        -fopenmp
         -O3
         -march=native # for SSE and AVX
         -mno-fma # fused multiply add
@@ -37,6 +38,8 @@ add_library(path_tracer_lib
         src/materials/lambertian.cpp
         src/materials/dielectric.cpp
         src/materials/metal.cpp
+        src/axis_aligned_bounding_box.cpp
+        src/bounding_volume_hierarchy.cpp
         )
 
 # being a cross-platform target, we enforce standards conformance on MSVC
@@ -107,6 +110,9 @@ target_link_libraries(RT1_9_camera PRIVATE path_tracer_lib)
 
 add_executable(RT1_10_final src/RT1/RT1_10_final.cpp)
 target_link_libraries(RT1_10_final PRIVATE path_tracer_lib)
+
+add_executable(RT2_1_bvh src/RT2/RT2_1_bvh.cpp)
+target_link_libraries(RT2_1_bvh PRIVATE path_tracer_lib)
 
 
 # ============================================================================
