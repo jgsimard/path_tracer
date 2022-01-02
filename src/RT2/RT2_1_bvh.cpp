@@ -11,63 +11,68 @@
 #include "bounding_volume_hierarchy.h"
 
 #include <chrono>
-#include <omp.h>
-#include <Eigen/Dense>
+//#include <omp.h>
 
+
+static Color black(0.0f, 0.0f, 0.0f);
+static Color white(1.0f, 1.0f, 1.0f);
+static Color blue(0.5f, 0.7f, 1.0f);
 
 // diffuse version 1 : spherical scattering
 Color ray_color(const Ray& ray, const Hittable& world, int depth) {
     HitRecord hit_record;
     // If we've exceeded the ray bounce limit, no more light is gathered.
-    if (depth <= 0)
-        return Color(0,0,0);
+    if (depth <= 0.0f)
+        return black;
 
     if (world.hit(ray, 0.001, infinity, hit_record)){ // use a tolerance
         Ray scattered;
         Color attenuation;
         if (hit_record.material_ptr->scatter(ray, hit_record, attenuation, scattered)){
-            return attenuation.cwiseProduct(ray_color(scattered, world, depth -1));
+            return attenuation * ray_color(scattered, world, depth -1);
         }
-        return Color(0,0,0);
+        return black;
     }
-    Vec3 unit_direction = unit_vector(ray.direction());
-    double t = 0.5 * (unit_direction.y() + 1.0);
-    return (1.0-t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
+
+    float t = 0.5 * (ray.direction()[1] + 1.0f);
+    return (1.0f-t) * white+ t * blue;
 }
 
 
 HittableList random_scene() {
     HittableList world;
 
-    auto ground_material = make_shared<Lambertian>(Color(0.5, 0.5, 0.5));
-    world.add(make_shared<Sphere>(Point3(0,-1000,0), 1000, ground_material));
+    auto ground_material = make_shared<Lambertian>(Color(0.5f, 0.5f, 0.5f));
+    world.add(make_shared<Sphere>(Point3(0.0f,-1000.0f,0.0f), 1000.0f, ground_material));
 
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
             auto choose_mat = random_double();
-            Point3 center(a + 0.9*random_double(), 0.2, b + 0.9*random_double());
+            Point3 center(a + 0.9f * random_double(), 0.2f, b + 0.9f * random_double());
 
-            if ((center - Point3(4, 0.2, 0)).norm() > 0.9) {
+            if (length(center - Point3(4.0f, 0.2f, 0.0f)) > 0.9f) {
                 shared_ptr<Material> Sphere_material;
 
                 if (choose_mat < 0.8) {
                     // diffuse
 //                    auto albedo = Color::random() * Color::random();
-                    Color albedo = random_vec(0.0, 1.0).cwiseProduct(random_vec(0.0, 1.0));
+//                    Color albedo = random_vec(0.0, 1.0).cwiseProduct(random_vec(0.0, 1.0));
+//                    Color albedo = random_vec01().cwiseProduct(random_vec01());
+                    Color albedo = random_vec01() * random_vec01();
                     Sphere_material = make_shared<Lambertian>(albedo);
                     world.add(make_shared<Sphere>(center, 0.2, Sphere_material));
                 } else if (choose_mat < 0.95) {
                     // metal
 //                    auto albedo = Color::random(0.5, 1);
 //                    auto fuzz = random_double(0, 0.5);
-                    auto albedo = random_vec(0.5, 1.0);
-                    auto fuzz = random_double() * 0.5;
+                    auto albedo = random_vec(0.5f, 1.0f);
+                    auto fuzz = random_double() * 0.5f;
                     Sphere_material = make_shared<Metal>(albedo, fuzz);
-                    world.add(make_shared<Sphere>(center, 0.2, Sphere_material));
+                    world.add(make_shared<Sphere>(center, 0.2f, Sphere_material));
                 } else {
                     // glass
-                    Sphere_material = make_shared<Dielectric>(1.5);
-                    world.add(make_shared<Sphere>(center, 0.2, Sphere_material));
+                    Sphere_material = make_shared<Dielectric>(1.5f);
+                    world.add(make_shared<Sphere>(center, 0.2f, Sphere_material));
                 }
             }
         }
@@ -107,12 +112,12 @@ int main() {
 //    const int max_depth = 50;
 
     const auto aspect_ratio = 3.0 / 2.0;
-    const int image_width = 200;
+    const int image_width = 1200;
 //    const auto aspect_ratio = 16.0 / 9.0;
 //    const int image_width = 256;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixels = 50;
-    const int max_depth = 50;
+    const int samples_per_pixels = 32;
+    const int max_depth = 10;
 
 
     // World

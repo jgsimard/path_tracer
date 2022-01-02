@@ -162,14 +162,6 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 
-SET( EIGEN3_INCLUDE_DIR "$ENV{EIGEN3_INCLUDE_DIR}" )
-SET( CMAKE_MODULE_PATH "$ENV{EIGEN3_DIR}" )
-
-find_package(Eigen3 REQUIRED)
-include_directories(
-        ${EIGEN3_INCLUDE_DIR}
-)
-
 # ============================================================================
 # compile the rest of the codebase using C++17
 # ============================================================================

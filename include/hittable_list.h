@@ -18,8 +18,8 @@ public:
     HittableList() = default;
     HittableList(shared_ptr<Hittable> hittable){ add(hittable);}
 
-    bool hit(const Ray& ray, double t_min, double t_max, HitRecord& hit_record) const override;
-    bool bounding_box(double time0, double time1, AABB& output_box) const override;
+    bool hit(const Ray& ray, float t_min, float t_max, HitRecord& hit_record) const override;
+    bool bounding_box(AABB& output_box) const override;
 
 
     void clear(){hittables_.clear();};

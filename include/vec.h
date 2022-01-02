@@ -4,33 +4,14 @@
 
 #pragma once
 
-//#include <memory>
-//#include <limits>
-//#include <random>
-#include <Eigen/Dense>
-#include <fmt/core.h>
+#include <linalg.h> // use this instead of eigen because very slow build times
+using namespace linalg::aliases;
 
+using Vec3 = float3;
+using Point3 = float3;
+using Color = float3;
 
-// vectors that will be used and related functions
-using Vec3 = Eigen::Vector3d;
-using Point3 = Eigen::Vector3d;
-using Color = Eigen::Vector3d;
+inline Vec3 unit_vector(const Vec3& v){
+    return v / length(v);
+}
 
-Vec3 unit_vector(const Vec3& v);
-
-double dot(const Vec3& v1, const Vec3& v2);
-
-Vec3 cross(const Vec3& v1, const Vec3& v2);
-
-//inline Vec3 unit_vector(const Vec3& v){
-//    return v.normalized();
-//}
-//
-//inline double dot(const Vec3& v1, const Vec3& v2){
-//    return v1.dot(v2);
-//}
-//
-//inline Vec3 cross(const Vec3& v1, const Vec3& v2)
-//{
-//    return v1.cross(v2);
-//}

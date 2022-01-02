@@ -14,16 +14,16 @@ class BoundingVolumeHierarchyNode : public Hittable {
 public:
     BoundingVolumeHierarchyNode() = default;
 
-    BoundingVolumeHierarchyNode(const HittableList& list, double time0, double time1)
+    BoundingVolumeHierarchyNode(const HittableList& list, float time0, float time1)
             : BoundingVolumeHierarchyNode(list.hittables_, 0, list.hittables_.size(), time0, time1) {}
 
     BoundingVolumeHierarchyNode(
             const std::vector<shared_ptr<Hittable>>& src_objects,
-            size_t start, size_t end, double time0, double time1);
+            size_t start, size_t end, float time0, float time1);
 
-    bool hit(const Ray& ray, double t_min, double t_max, HitRecord& rec) const override;
+    bool hit(const Ray& ray, float t_min, float t_max, HitRecord& rec) const override;
 
-    bool bounding_box(double time0, double time1, AABB& output_box) const override;
+    bool bounding_box(AABB& output_box) const override;
 
 public:
     shared_ptr<Hittable> left_;

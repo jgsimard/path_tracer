@@ -8,9 +8,6 @@
 #include <limits>
 #include <random>
 
-// Eigen : matrix math
-#include <Eigen/Dense>
-
 // fast IO
 #include <fmt/core.h>
 
@@ -23,24 +20,30 @@
 using std::shared_ptr;
 using std::make_shared;
 using std::sqrt;
+using std::sin;
+using std::cos;
+using std::acos;
 
 // Constants
-const double infinity = std::numeric_limits<double>::infinity();
-const double pi = 3.141592653589793;
+const float infinity = std::numeric_limits<float>::infinity();
+const float pi = 3.141592653589793f;
+constexpr float pi2 = 2 * 3.141592653589793f;
 
 // Utility Functions
-double degrees_to_radians(double degrees);
-double radians_to_degrees(double radians);
+float degrees_to_radians(float degrees);
+float radians_to_degrees(float radians);
 
-double random_double();
+float random_double();
 
-void write_color(Color pixel_color);
+void write_color(const Color& pixel_color);
 
-void write_color(Color pixel_color, int samples_per_pixels);
+void write_color(const Color& pixel_color, int samples_per_pixels);
 
 Vec3 random_vec();
 
-Vec3 random_vec(double min, double max);
+Vec3 random_vec01();
+
+Vec3 random_vec(float min, float max);
 
 Vec3 random_in_unit_sphere();
 
@@ -52,9 +55,10 @@ bool near_zero(const Vec3& v);
 
 Vec3 reflect(const Vec3& v, const Vec3& normal);
 
-Vec3 refract(const Vec3& v_in, const Vec3& normal, double ratio_index_of_refraction);
+Vec3 refract(const Vec3& v_in, const Vec3& normal, float ratio_index_of_refraction);
 
 Vec3 random_in_unit_disk();
 
 int random_int(int min, int max);
+
 

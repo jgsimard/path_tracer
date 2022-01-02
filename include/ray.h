@@ -17,7 +17,7 @@ public:
     [[nodiscard]] Point3 origin() const  { return origin_; }
     [[nodiscard]] Vec3 direction() const { return direction_; }
 
-    [[nodiscard]] Point3 at(double t) const {
+    [[nodiscard]] Point3 at(float t) const {
         return origin_ + t * direction_;
     }
 

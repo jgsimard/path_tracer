@@ -19,7 +19,8 @@ add_compile_options(
         -mno-fma # fused multiply add
         -Wall # enables most compiler's warning messages
         -Wextra # enables more compiler's warning messages
-#        -Werror # Make all warnings into errors. CANNOT  USE THAT WITH c++20 because Eigen 3.4.0 is not c++20 compliant
+        -pedantic
+#        -Werror # Make all warnings into errors.
 )
 
 # ============================================================================

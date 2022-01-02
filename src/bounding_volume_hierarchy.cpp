@@ -5,13 +5,12 @@
 #include "bounding_volume_hierarchy.h"
 
 
-bool BoundingVolumeHierarchyNode::bounding_box(double time0, double time1, AABB& output_box) const {
+bool BoundingVolumeHierarchyNode::bounding_box(AABB& output_box) const {
     output_box = box_;
     return true;
 }
 
-bool BoundingVolumeHierarchyNode::hit(const Ray& ray, double t_min, double t_max, HitRecord& rec) const {
-//    fmt::print(stderr, "BoundingVolumeHierarchyNode::hit.\n");
+bool BoundingVolumeHierarchyNode::hit(const Ray& ray, float t_min, float t_max, HitRecord& rec) const {
     if (!box_.hit(ray, t_min, t_max))
         return false;
 
@@ -21,33 +20,32 @@ bool BoundingVolumeHierarchyNode::hit(const Ray& ray, double t_min, double t_max
     return hit_left || hit_right;
 }
 
-inline bool box_compare(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b, int axis) {
+inline bool box_compare(const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b, int axis) {
     AABB box_a;
     AABB box_b;
 
-    if (!a->bounding_box(0,0, box_a) || !b->bounding_box(0,0, box_b))
+    if (!a->bounding_box(box_a) || !b->bounding_box(box_b))
         fmt::print(stderr, "No bounding box in bvh_node constructor.\n");
-//        std::cerr << "No bounding box in bvh_node constructor.\n";
 
     return box_a.minimum()[axis] < box_b.minimum()[axis];
 }
 
 
-bool box_x_compare (const shared_ptr<Hittable> a, const shared_ptr<Hittable> b) {
+bool box_x_compare (const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b) {
     return box_compare(a, b, 0);
 }
 
-bool box_y_compare (const shared_ptr<Hittable> a, const shared_ptr<Hittable> b) {
+bool box_y_compare (const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b) {
     return box_compare(a, b, 1);
 }
 
-bool box_z_compare (const shared_ptr<Hittable> a, const shared_ptr<Hittable> b) {
+bool box_z_compare (const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b) {
     return box_compare(a, b, 2);
 }
 
 BoundingVolumeHierarchyNode::BoundingVolumeHierarchyNode(
         const std::vector<shared_ptr<Hittable>>& src_objects,
-        size_t start, size_t end, double time0, double time1
+        size_t start, size_t end, float time0, float time1
 ) {
     auto objects = src_objects; // Create a modifiable array of the source scene objects
 
@@ -78,11 +76,10 @@ BoundingVolumeHierarchyNode::BoundingVolumeHierarchyNode(
 
     AABB box_left, box_right;
 
-    if (  !left_->bounding_box (time0, time1, box_left)
-          || !right_->bounding_box(time0, time1, box_right)
+    if (  !left_->bounding_box (box_left)
+          || !right_->bounding_box(box_right)
             )
         fmt::print(stderr, "No bounding box in bvh_node constructor.\n");
-//        std::cerr << "No bounding box in bvh_node constructor.\n";
 
     box_ = surrounding_box(box_left, box_right);
 }

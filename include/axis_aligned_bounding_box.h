@@ -16,7 +16,7 @@ public:
     Point3 minimum() const {return minimum_; }
     Point3 maximum() const {return maximum_; }
 
-    bool hit(const Ray& ray, double t_min, double t_max) const;
+    bool hit(const Ray& ray, float t_min, float t_max) const;
 
 
 
