@@ -131,7 +131,7 @@ Vec3 random_in_unit_disk()
 //    }
 }
 
-int random_int(int min, int max) {
+int random_int_0_2() {
     // TODO fix this
     // Returns a random integer in [min,max].
     static std::uniform_int_distribution<int> distribution_int(0, 2);

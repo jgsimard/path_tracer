@@ -59,6 +59,6 @@ Vec3 refract(const Vec3& v_in, const Vec3& normal, float ratio_index_of_refracti
 
 Vec3 random_in_unit_disk();
 
-int random_int(int min, int max);
+int random_int_0_2();
 
 

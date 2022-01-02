@@ -19,8 +19,8 @@ add_compile_options(
         -mno-fma # fused multiply add
         -Wall # enables most compiler's warning messages
         -Wextra # enables more compiler's warning messages
-        -pedantic
-#        -Werror # Make all warnings into errors.
+        -pedantic # enables even more compiler's warning messages
+        -Werror # Make all warnings into errors.
 )
 
 # ============================================================================
@@ -31,7 +31,6 @@ add_compile_options(
 #)
 
 add_library(path_tracer_lib
-        src/vec.cpp
         src/utils.cpp
         src/camera.cpp
         src/hittable_list.cpp

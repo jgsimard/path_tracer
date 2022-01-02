@@ -49,7 +49,7 @@ BoundingVolumeHierarchyNode::BoundingVolumeHierarchyNode(
 ) {
     auto objects = src_objects; // Create a modifiable array of the source scene objects
 
-    int axis = random_int(0,2);
+    int axis = random_int_0_2();
     auto comparator = (axis == 0) ? box_x_compare
                                   : (axis == 1) ? box_y_compare
                                                 : box_z_compare;
