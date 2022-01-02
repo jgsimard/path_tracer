@@ -11,7 +11,7 @@ class Ray {
 public:
     Ray() = default;
     Ray(Point3  origin, Vec3  direction)
-            : origin_(std::move(origin)), direction_(std::move(direction))
+            : origin_(std::move(origin)), direction_(unit_vector(std::move(direction)))
     {}
 
     [[nodiscard]] Point3 origin() const  { return origin_; }

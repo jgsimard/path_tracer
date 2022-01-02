@@ -7,19 +7,22 @@
 bool Sphere::hit(const Ray &ray, double t_min, double t_max, HitRecord& hit_record) const
 {
     Vec3 oc = ray.origin() - center_;
-    double a = dot(ray.direction(), ray.direction());
+//    double a = dot(ray.direction(), ray.direction()); // =1 by definition
     double half_b = dot(oc, ray.direction()); // using half_b results in less computation for the same retults
 //    double c = dot(oc, oc) - radius_*radius_;
     double c = dot(oc, oc) - radius_square_;
-    double discriminant = half_b * half_b - a * c;
+//    double discriminant = half_b * half_b - a * c;
+    double discriminant = half_b * half_b - c; // a=1 by construction
     if (discriminant < 0) // does not touch
         return false;
 
     // Find the nearest root that lies in the acceptable range.
     double sqrt_discriminant = std::sqrt(discriminant);
-    double root = (-half_b - sqrt_discriminant) / a ;// find closest root
+//    double root = (-half_b - sqrt_discriminant) / a ;// find closest root
+    double root = (-half_b - sqrt_discriminant)  ;// find closest root
     if (root < t_min || root > t_max){ // check if outside range
-        root = (-half_b + sqrt_discriminant) / a ;
+//        root = (-half_b + sqrt_discriminant) / a ;
+        root = (-half_b + sqrt_discriminant) ;
         if (root < t_min || root > t_max)
             return false;
     }
