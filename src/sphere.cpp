@@ -6,6 +6,10 @@
 
 bool Sphere::hit(const Ray &ray, double t_min, double t_max, HitRecord& hit_record) const
 {
+    // this code solve the quadratic equation a x^2 + b x + c = 0
+    // where a = dot(ray.direction(), ray.direction()), but ray.direction() is a unit vector so a=1 by construction.
+    // so we remove it from the computation
+
     Vec3 oc = ray.origin() - center_;
 //    double a = dot(ray.direction(), ray.direction()); // =1 by definition
     double half_b = dot(oc, ray.direction()); // using half_b results in less computation for the same retults
