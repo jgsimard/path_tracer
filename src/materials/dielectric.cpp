@@ -7,7 +7,7 @@
 
 bool Dielectric::scatter(const Ray& ray_in, const HitRecord& hit_record, Color& attenuation, Ray& scattered) const
 {
-    static  Color white(1.0f, 1.0f, 1.0f);
+    static constexpr Color white(1.0f, 1.0f, 1.0f);
     attenuation = white;
 //    attenuation = Color(1.0f, 1.0f, 1.0f);
     float ratio_index_of_refraction = hit_record.front_face ? 1.0f / index_of_refraction_ : index_of_refraction_; // assume the outside is air, TODO : change this!!!

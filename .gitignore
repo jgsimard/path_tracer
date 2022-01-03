@@ -41,3 +41,6 @@ output/*
 /scenes/meshes
 /scenes/assets
 
+.vscode/
+
+

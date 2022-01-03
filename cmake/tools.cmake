@@ -60,8 +60,8 @@ if(USE_SANITIZER OR USE_STATIC_ANALYZER)
   endif()
 endif()
 
-#set(USE_CCACHE YES)
-## enables CCACHE support through the USE_CCACHE flag possible values are: YES, NO or equivalent
-#if(USE_CCACHE)
-#  CPMAddPackage("gh:TheLartians/Ccache.cmake@1.2.3")
-#endif()
+set(USE_CCACHE YES)
+# enables CCACHE support through the USE_CCACHE flag possible values are: YES, NO or equivalent
+if(USE_CCACHE)
+  CPMAddPackage("gh:TheLartians/Ccache.cmake@1.2.3")
+endif()

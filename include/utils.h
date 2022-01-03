@@ -11,6 +11,10 @@
 // fast IO
 #include <fmt/core.h>
 
+// rng
+#include "pcg32.h"
+//#include "pcg32_8.h"
+
 //ME
 #include "vec.h"
 #include "ray.h"

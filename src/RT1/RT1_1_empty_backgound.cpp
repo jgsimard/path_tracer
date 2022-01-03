@@ -2,11 +2,13 @@
 #include "ray.h"
 #include <fmt/core.h>
 
+static constexpr Color black(0.0f, 0.0f, 0.0f);
+static constexpr Color white(1.0f, 1.0f, 1.0f);
+static constexpr Color blue(0.5f, 0.7f, 1.0f);
+
 Color ray_color(const Ray& ray) {
-//    Vec3 unit_direction = unit_vector(ray.direction());
-//    auto t = 0.5 * (unit_direction.y() + 1.0);
-    auto t = 0.5 * (ray.direction().y() + 1.0);
-    return (1.0-t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
+    float t = 0.5 * (ray.direction()[1] + 1.0f);
+    return (1.0f-t) * white+ t * blue;
 }
 
 int main() {

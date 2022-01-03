@@ -1,24 +1,19 @@
 #include "utils.h"
 #include "hittable_list.h"
-#include "Sphere.h"
+#include "sphere.h"
 #include "ray.h"
 #include "camera.h"
 #include "materials/metal.h"
 #include "materials/lambertian.h"
 #include "materials/dielectric.h"
-
-#include "axis_aligned_bounding_box.h"
 #include "bounding_volume_hierarchy.h"
 
 #include <chrono>
-//#include <omp.h>
 
+static constexpr Color black(0.0f, 0.0f, 0.0f);
+static constexpr Color white(1.0f, 1.0f, 1.0f);
+static constexpr Color blue(0.5f, 0.7f, 1.0f);
 
-static Color black(0.0f, 0.0f, 0.0f);
-static Color white(1.0f, 1.0f, 1.0f);
-static Color blue(0.5f, 0.7f, 1.0f);
-
-// diffuse version 1 : spherical scattering
 Color ray_color(const Ray& ray, const Hittable& world, int depth) {
     HitRecord hit_record;
     // If we've exceeded the ray bounce limit, no more light is gathered.
@@ -55,16 +50,11 @@ HittableList random_scene() {
 
                 if (choose_mat < 0.8) {
                     // diffuse
-//                    auto albedo = Color::random() * Color::random();
-//                    Color albedo = random_vec(0.0, 1.0).cwiseProduct(random_vec(0.0, 1.0));
-//                    Color albedo = random_vec01().cwiseProduct(random_vec01());
                     Color albedo = random_vec01() * random_vec01();
                     Sphere_material = make_shared<Lambertian>(albedo);
-                    world.add(make_shared<Sphere>(center, 0.2, Sphere_material));
+                    world.add(make_shared<Sphere>(center, 0.2f, Sphere_material));
                 } else if (choose_mat < 0.95) {
                     // metal
-//                    auto albedo = Color::random(0.5, 1);
-//                    auto fuzz = random_double(0, 0.5);
                     auto albedo = random_vec(0.5f, 1.0f);
                     auto fuzz = random_double() * 0.5f;
                     Sphere_material = make_shared<Metal>(albedo, fuzz);
@@ -78,58 +68,47 @@ HittableList random_scene() {
         }
     }
 
-    auto material1 = make_shared<Dielectric>(1.5);
-    world.add(make_shared<Sphere>(Point3(0, 1, 0), 1.0, material1));
+    auto material1 = make_shared<Dielectric>(1.5f);
+    world.add(make_shared<Sphere>(Point3(0.0f, 1.0f, 0.0f), 1.0f, material1));
 
-    auto material2 = make_shared<Lambertian>(Color(0.4, 0.2, 0.1));
-    world.add(make_shared<Sphere>(Point3(-4, 1, 0), 1.0, material2));
+    auto material2 = make_shared<Lambertian>(Color(0.4f, 0.2f, 0.1f));
+    world.add(make_shared<Sphere>(Point3(-4.0f, 1.0f, 0.0f), 1.0f, material2));
 
-    auto material3 = make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0);
-    world.add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
+    auto material3 = make_shared<Metal>(Color(0.7f, 0.6f, 0.5f), 0.0f);
+    world.add(make_shared<Sphere>(Point3(4.0f, 1.0f, 0.0f), 1.0f, material3));
 
-//    return world;
-    fmt::print(stderr, "Building BVH ...");
-    auto start_time = std::chrono::steady_clock::now();
-
-    auto out = HittableList(make_shared<BvhNode>(world, 0.0, 1.0));
-
-    auto final_time = std::chrono::steady_clock::now();
-    std::chrono::duration<double> elapsed_seconds = final_time - start_time;
-    fmt::print(stderr, "\rBuilding BVH ... Done. Took {0} s\n", elapsed_seconds.count());
-
-    return out;
+    return world;
 }
 
 
 
 int main() {
-//    omp_set_num_threads(4);
-    // Image
-//    const auto aspect_ratio = 3.0 / 2.0;
-//    const int image_width = 1200;
-//    const int image_height = static_cast<int>(image_width / aspect_ratio);
-//    const int samples_per_pixels = 500;
-//    const int max_depth = 50;
-
     const auto aspect_ratio = 3.0 / 2.0;
     const int image_width = 1200;
-//    const auto aspect_ratio = 16.0 / 9.0;
-//    const int image_width = 256;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixels = 32;
-    const int max_depth = 10;
+    const int samples_per_pixels = 500;
+    const int max_depth = 50;
 
 
     // World
     HittableList world = random_scene();
 
+    fmt::print(stderr, "Building BVH ...");
+    auto bvh_start_time = std::chrono::steady_clock::now();
+
+    world = HittableList(make_shared<BvhNode>(world, 0.0f, 1.0f));
+
+    auto bvh_final_time = std::chrono::steady_clock::now();
+    std::chrono::duration<double> bvh_elapsed_seconds = bvh_final_time - bvh_start_time;
+    fmt::print(stderr, "\rBuilding BVH ... Done. Took {0} s\n", bvh_elapsed_seconds.count());
+
 
     // Camera
-    Point3 lookfrom(13,2,3);
-    Point3 lookat(0,0,0);
-    Vec3 vup(0,1,0);
-    auto dist_to_focus = 10;
-    auto aperture = 0.1;
+    Point3 lookfrom(13.0f,2.0f,3.0f);
+    Point3 lookat(0.0f,0.0f,0.0f);
+    Vec3 vup(0.0f,1.0f,0.0f);
+    auto dist_to_focus = 10.0f;
+    auto aperture = 0.1f;
 
     Camera camera(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
 
@@ -145,10 +124,10 @@ int main() {
         for (int i = 0; i < image_width; ++i) {
             Color pixel_color(0, 0, 0);
             for(int s = 0; s < samples_per_pixels; ++s){
-                auto u = double(i + random_double()) / (image_width-1);
-                auto v = double(j + random_double()) / (image_height-1);
+                auto u = float(i + random_double()) / (image_width-1);
+                auto v = float(j + random_double()) / (image_height-1);
 
-                Ray ray = camera.get_ray(u,v);
+                Ray ray = camera.get_ray(u, v);
                 pixel_color = pixel_color + ray_color(ray, world, max_depth);
             }
             write_color(pixel_color, samples_per_pixels);

@@ -10,25 +10,30 @@ project(path_tracer
 include(cmake/Config.cmake)
 
 
-# compilation options for faster result and better practive
+# compilation options for faster result and better practice
 add_compile_options(
 #        -fmodules-ts # enables modules g++-11 only
-#        -fopenmp
+        -fopenmp
         -O3
         -march=native # for SSE and AVX
         -mno-fma # fused multiply add
         -Wall # enables most compiler's warning messages
         -Wextra # enables more compiler's warning messages
-        -pedantic # enables even more compiler's warning messages
-        -Werror # Make all warnings into errors.
+#        -Werror # Make all warnings into errors.
+#        /O2
+#        /arch:AVX
+#        /arch:AVX2
+#        /arch:AVX512
+#        /fp:fast
 )
 
 # ============================================================================
 # Create path_tracer_lib library
 # ============================================================================
-#include_directories(
-#        include
-#)
+
+include_directories(
+        include
+)
 
 add_library(path_tracer_lib
         src/utils.cpp
@@ -42,8 +47,8 @@ add_library(path_tracer_lib
         src/bounding_volume_hierarchy.cpp
         )
 
-# being a cross-platform target, we enforce standards conformance on MSVC
-target_compile_options(path_tracer_lib PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
+## being a cross-platform target, we enforce standards conformance on MSVC
+#target_compile_options(path_tracer_lib PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
 
 # Link dependencies
 target_link_libraries(
@@ -72,44 +77,44 @@ target_include_directories(path_tracer_lib
 # ============================================================================
 # Create executables
 # ============================================================================
-add_executable(RT1_0_first_image src/RT1/RT1_0_first_image.cpp)
-target_link_libraries(RT1_0_first_image PRIVATE path_tracer_lib)
+# add_executable(RT1_0_first_image src/RT1/RT1_0_first_image.cpp)
+# target_link_libraries(RT1_0_first_image PRIVATE path_tracer_lib)
 
 
-add_executable(RT1_1_empty_backgound src/RT1/RT1_1_empty_backgound.cpp)
-target_link_libraries(RT1_1_empty_backgound PRIVATE path_tracer_lib)
+# add_executable(RT1_1_empty_backgound src/RT1/RT1_1_empty_backgound.cpp)
+# target_link_libraries(RT1_1_empty_backgound PRIVATE path_tracer_lib)
 
 
-add_executable(RT1_2_first_sphere src/RT1/RT1_2_first_sphere.cpp)
-target_link_libraries(RT1_2_first_sphere PRIVATE path_tracer_lib)
+# add_executable(RT1_2_first_sphere src/RT1/RT1_2_first_sphere.cpp)
+# target_link_libraries(RT1_2_first_sphere PRIVATE path_tracer_lib)
 
 
-add_executable(RT1_3_sphere_with_normals src/RT1/RT1_3_sphere_with_normals.cpp)
-target_link_libraries(RT1_3_sphere_with_normals PRIVATE path_tracer_lib)
+# add_executable(RT1_3_sphere_with_normals src/RT1/RT1_3_sphere_with_normals.cpp)
+# target_link_libraries(RT1_3_sphere_with_normals PRIVATE path_tracer_lib)
 
 
-add_executable(RT1_4_sphere_with_normals_with_ground src/RT1/RT1_4_sphere_with_normals_with_ground.cpp)
-target_link_libraries(RT1_4_sphere_with_normals_with_ground PRIVATE path_tracer_lib)
+# add_executable(RT1_4_sphere_with_normals_with_ground src/RT1/RT1_4_sphere_with_normals_with_ground.cpp)
+# target_link_libraries(RT1_4_sphere_with_normals_with_ground PRIVATE path_tracer_lib)
 
 
-add_executable(RT1_5_antialiasing src/RT1/RT1_5_antialiasing.cpp)
-target_link_libraries(RT1_5_antialiasing PRIVATE path_tracer_lib)
+# add_executable(RT1_5_antialiasing src/RT1/RT1_5_antialiasing.cpp)
+# target_link_libraries(RT1_5_antialiasing PRIVATE path_tracer_lib)
 
 
-add_executable(RT1_6_diffuse src/RT1/RT1_6_diffuse.cpp)
-target_link_libraries(RT1_6_diffuse PRIVATE path_tracer_lib)
+# add_executable(RT1_6_diffuse src/RT1/RT1_6_diffuse.cpp)
+# target_link_libraries(RT1_6_diffuse PRIVATE path_tracer_lib)
 
-add_executable(RT1_7_metal src/RT1/RT1_7_metal.cpp)
-target_link_libraries(RT1_7_metal PRIVATE path_tracer_lib)
+# add_executable(RT1_7_metal src/RT1/RT1_7_metal.cpp)
+# target_link_libraries(RT1_7_metal PRIVATE path_tracer_lib)
 
-add_executable(RT1_8_dielectrics src/RT1/RT1_8_dielectrics.cpp)
-target_link_libraries(RT1_8_dielectrics PRIVATE path_tracer_lib)
+# add_executable(RT1_8_dielectrics src/RT1/RT1_8_dielectrics.cpp)
+# target_link_libraries(RT1_8_dielectrics PRIVATE path_tracer_lib)
 
-add_executable(RT1_9_camera src/RT1/RT1_9_camera.cpp)
-target_link_libraries(RT1_9_camera PRIVATE path_tracer_lib)
+# add_executable(RT1_9_camera src/RT1/RT1_9_camera.cpp)
+# target_link_libraries(RT1_9_camera PRIVATE path_tracer_lib)
 
-add_executable(RT1_10_final src/RT1/RT1_10_final.cpp)
-target_link_libraries(RT1_10_final PRIVATE path_tracer_lib)
+# add_executable(RT1_10_final src/RT1/RT1_10_final.cpp)
+# target_link_libraries(RT1_10_final PRIVATE path_tracer_lib)
 
 add_executable(RT2_1_bvh src/RT2/RT2_1_bvh.cpp)
 target_link_libraries(RT2_1_bvh PRIVATE path_tracer_lib)

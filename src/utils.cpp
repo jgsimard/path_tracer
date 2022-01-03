@@ -15,9 +15,11 @@ float radians_to_degrees(float radians) {
 }
 
 float  random_double (){
-    static std::uniform_real_distribution<float> distribution(0.0, 1.0);
-    static std::mt19937 generator;
-    return distribution(generator);
+    static pcg32 rng = pcg32();
+    return rng.nextFloat();
+//    static std::uniform_real_distribution<float> distribution(0.0, 1.0);
+//    static std::mt19937 generator;
+//    return distribution(generator);
 }
 
 void write_color(const Color& pixel_color) {
