@@ -25,3 +25,4 @@ private:
     Point3 origin_;
     Vec3 direction_;
 };
+

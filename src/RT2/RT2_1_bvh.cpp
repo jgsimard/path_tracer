@@ -8,7 +8,9 @@
 #include "materials/dielectric.h"
 #include "bounding_volume_hierarchy.h"
 
+
 #include <chrono>
+#include <omp.h>
 
 static constexpr Color black(0.0f, 0.0f, 0.0f);
 static constexpr Color white(1.0f, 1.0f, 1.0f);
@@ -30,7 +32,7 @@ Color ray_color(const Ray& ray, const Hittable& world, int depth) {
     }
 
     float t = 0.5 * (ray.direction()[1] + 1.0f);
-    return (1.0f-t) * white+ t * blue;
+    return (1.0f - t) * white + t * blue;
 }
 
 
@@ -81,13 +83,17 @@ HittableList random_scene() {
 }
 
 
+#pragma omp declare reduction (+: float3: omp_out=omp_out+omp_in)\
+     initializer(omp_priv=float3(0.0f))
 
 int main() {
     const auto aspect_ratio = 3.0 / 2.0;
     const int image_width = 1200;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples_per_pixels = 500;
-    const int max_depth = 50;
+    const int samples_per_pixels = 50;
+    const int max_depth = 5;
+    // const int samples_per_pixels = 32;
+    // const int max_depth = 0;
 
 
     // World
@@ -119,16 +125,20 @@ int main() {
 
     fmt::print("P3\n{0} {1}\n255\n", image_width, image_height);
 
+    omp_set_num_threads(12);
+
     for (int j = image_height-1; j >= 0; --j) {
         fmt::print(stderr, "\rScanlines remaining: {0}", j);
         for (int i = 0; i < image_width; ++i) {
             Color pixel_color(0, 0, 0);
+            #pragma omp parallel for reduction (+:pixel_color)
             for(int s = 0; s < samples_per_pixels; ++s){
                 auto u = float(i + random_double()) / (image_width-1);
                 auto v = float(j + random_double()) / (image_height-1);
 
                 Ray ray = camera.get_ray(u, v);
-                pixel_color = pixel_color + ray_color(ray, world, max_depth);
+                auto rc = ray_color(ray, world, max_depth);
+                pixel_color += rc ;
             }
             write_color(pixel_color, samples_per_pixels);
         }

@@ -24,10 +24,10 @@ bool Sphere::hit(const Ray &ray, float  t_min, float  t_max, HitRecord& hit_reco
     float  sqrt_discriminant = std::sqrt(discriminant);
 //    float  root = (-half_b - sqrt_discriminant) / a ;// find closest root
     float  root = (-half_b - sqrt_discriminant)  ;// find closest root
-    if (root < t_min || root > t_max){ // check if outside range
+    if ((root < t_min) || (root > t_max)){ // check if outside range
 //        root = (-half_b + sqrt_discriminant) / a ;
         root = (-half_b + sqrt_discriminant) ;
-        if (root < t_min || root > t_max)
+        if ((root < t_min) || (root > t_max))
             return false;
     }
 

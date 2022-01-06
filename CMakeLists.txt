@@ -9,17 +9,23 @@ project(path_tracer
 # ============================================================================
 include(cmake/Config.cmake)
 
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
 
 # compilation options for faster result and better practice
 add_compile_options(
-#        -fmodules-ts # enables modules g++-11 only
+       -fmodules-ts # enables modules g++-11 only
         -fopenmp
         -O3
         -march=native # for SSE and AVX
         -mno-fma # fused multiply add
         -Wall # enables most compiler's warning messages
         -Wextra # enables more compiler's warning messages
-#        -Werror # Make all warnings into errors.
+        -Werror # Make all warnings into errors.
 #        /O2
 #        /arch:AVX
 #        /arch:AVX2
